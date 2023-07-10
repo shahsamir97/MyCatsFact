@@ -9,6 +9,7 @@ fun generateCatData() : ArrayList<Cat> {
         val cat = Cat()
         cat.name = if (i%2 == 0) "Luna" else "Max"
         cat.fact = "Cats are believed to be the only mammals who don’t taste sweetness."
+        cat.imageLink = "https://cataas.com/cat/says/$i"
         cats.add(cat)
     }
 
