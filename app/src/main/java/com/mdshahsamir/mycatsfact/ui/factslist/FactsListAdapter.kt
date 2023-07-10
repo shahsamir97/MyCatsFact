@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mdshahsamir.mycatsfact.databinding.FactListItemBinding
 import com.mdshahsamir.mycatsfact.model.Animal
 
-class FactsListAdapter() : RecyclerView.Adapter<FactsListAdapter.FactViewHolder>() {
+class FactsListAdapter(private val factListItemActions: FactListItemActions) : RecyclerView.Adapter<FactsListAdapter.FactViewHolder>() {
 
     private var data : List<Animal> = ArrayList()
 
@@ -15,6 +15,7 @@ class FactsListAdapter() : RecyclerView.Adapter<FactsListAdapter.FactViewHolder>
         fun bind(animal : Animal) {
             binding.animalNameTextView.text = animal.name
             binding.animalFactTextView.text = animal.fact
+            binding.root.setOnClickListener { factListItemActions.onClick(animal) }
         }
     }
 

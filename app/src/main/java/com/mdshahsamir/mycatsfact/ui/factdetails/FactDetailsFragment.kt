@@ -1,19 +1,21 @@
 package com.mdshahsamir.mycatsfact.ui.factdetails
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mdshahsamir.mycatsfact.R
+import androidx.fragment.app.Fragment
+import com.mdshahsamir.mycatsfact.databinding.FragmentFactDetailsBinding
 
 class FactDetailsFragment : Fragment() {
+
+    private lateinit var binding : FragmentFactDetailsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fact_details, container, false)
+        binding = FragmentFactDetailsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 }

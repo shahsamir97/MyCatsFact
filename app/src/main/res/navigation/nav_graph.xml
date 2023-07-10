@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/factsListFragment"
         android:name="com.mdshahsamir.mycatsfact.ui.factslist.FactsListFragment"
-        android:label="fragment_facts_list"
-        tools:layout="@layout/fragment_facts_list" >
+        android:label="Cat Facts"
+        tools:layout="@layout/fragment_facts_list">
         <action
             android:id="@+id/action_factsListFragment_to_factDetailsFragment"
             app:destination="@id/factDetailsFragment" />
@@ -17,6 +17,6 @@
     <fragment
         android:id="@+id/factDetailsFragment"
         android:name="com.mdshahsamir.mycatsfact.ui.factdetails.FactDetailsFragment"
-        android:label="fragment_fact_details"
+        android:label="Fact Details"
         tools:layout="@layout/fragment_fact_details" />
 </navigation>
