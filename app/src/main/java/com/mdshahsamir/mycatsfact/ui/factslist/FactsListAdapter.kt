@@ -8,11 +8,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.mdshahsamir.mycatsfact.databinding.FactListItemBinding
 import com.mdshahsamir.mycatsfact.model.Animal
 
-class FactsListAdapter(private val factListItemActions: FactListItemActions) : RecyclerView.Adapter<FactsListAdapter.FactViewHolder>() {
+class FactsListAdapter(private val factListItemActions: FactListItemActions)
+    : RecyclerView.Adapter<FactsListAdapter.FactViewHolder>() {
 
     private var data : List<Animal> = ArrayList()
 
-    inner class FactViewHolder(private val binding: FactListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class FactViewHolder(private val binding: FactListItemBinding)
+        : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(animal : Animal) {
             binding.animalNameTextView.text = animal.name

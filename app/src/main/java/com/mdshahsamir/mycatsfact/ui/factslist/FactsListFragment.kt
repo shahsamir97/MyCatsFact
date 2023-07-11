@@ -33,6 +33,7 @@ class FactsListFragment : Fragment(), FactListItemActions {
     }
 
     override fun onClick(animal: Animal) {
-        findNavController().navigate(R.id.action_factsListFragment_to_factDetailsFragment)
+        val action = FactsListFragmentDirections.actionFactsListFragmentToFactDetailsFragment(animal)
+        findNavController().navigate(action)
     }
 }

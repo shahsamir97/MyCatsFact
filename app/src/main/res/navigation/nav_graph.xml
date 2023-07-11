@@ -18,5 +18,9 @@
         android:id="@+id/factDetailsFragment"
         android:name="com.mdshahsamir.mycatsfact.ui.factdetails.FactDetailsFragment"
         android:label="Fact Details"
-        tools:layout="@layout/fragment_fact_details" />
+        tools:layout="@layout/fragment_fact_details" >
+        <argument
+            android:name="animal"
+            app:argType="com.mdshahsamir.mycatsfact.model.Animal" />
+    </fragment>
 </navigation>

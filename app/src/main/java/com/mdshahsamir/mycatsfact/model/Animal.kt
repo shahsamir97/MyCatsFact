@@ -1,7 +1,9 @@
 package com.mdshahsamir.mycatsfact.model
 
-import android.graphics.Bitmap
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 open class Animal(
      var name : String = "",
      var breed : String = "",
@@ -9,4 +11,4 @@ open class Animal(
      var weight : Double = 0.0,
      var imageLink : String = "",
      var fact : String = ""
-    )
+    ) : Parcelable
