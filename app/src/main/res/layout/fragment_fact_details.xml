@@ -32,7 +32,7 @@
         android:text="Cute Cat"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/white"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/animalBreedTextView"
         app:layout_constraintStart_toStartOf="@+id/animalBreedTextView" />
 
@@ -43,7 +43,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         android:text="Persian"
-        android:textColor="@color/white"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="@+id/animalImageView"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -66,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:drawableEnd="@drawable/baseline_speaker_phone_24"
-        android:drawableTint="@color/white"
+        android:textColor="@android:color/white"
         android:text="SOUND"
         app:layout_constraintEnd_toEndOf="@+id/animalFactTextView"
         app:layout_constraintStart_toStartOf="@+id/animalFactTextView"
