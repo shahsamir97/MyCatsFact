@@ -5,4 +5,10 @@
     <string name="n_a">N/A</string>
     <string name="sample_cat_fact">Cats are believed to be the only mammals who don’t taste sweetness.</string>
     <string name="dot_symbol">•</string>
+    <string name="sound">SOUND</string>
+    <string name="eat">EAT</string>
+    <string name="sleep">SLEEP</string>
+    <string name="age">"Age : "</string>
+    <string name="breed">"Breed : "</string>
+    <string name="weight">"Weight : </string>
 </resources>

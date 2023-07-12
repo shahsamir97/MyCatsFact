@@ -19,13 +19,15 @@ class FactsListViewModel(private val factListRepository: FactListRepository) : V
     val isDataLoading : LiveData<Boolean>
         get() = _isDataLoading
 
+    private var offset: Int = 1
+
     init {
         populateData()
     }
 
     private fun populateData() {
         _isDataLoading.value = true
-        val data = generateCatData(10)
+        val data = generateCatData(10, offset)
         viewModelScope.launch {
             data.forEach {
                 val fact = factListRepository.getCatFact()
@@ -37,9 +39,10 @@ class FactsListViewModel(private val factListRepository: FactListRepository) : V
     }
 
     fun loadMore(){
+        offset += 10
         _isDataLoading.value = true
         viewModelScope.launch {
-            val newData = generateCatData(10)
+            val newData = generateCatData(10, offset)
             newData.forEach {
                 val fact = factListRepository.getCatFact()
                 it.fact = fact.fact

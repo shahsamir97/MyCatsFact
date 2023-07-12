@@ -4,10 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.mdshahsamir.mycatsfact.databinding.FactListItemBinding
 import com.mdshahsamir.mycatsfact.model.Animal
-import kotlinx.coroutines.coroutineScope
 
 class FactsListAdapter(private val factListItemActions: FactListItemActions) :
     RecyclerView.Adapter<FactsListAdapter.FactViewHolder>() {

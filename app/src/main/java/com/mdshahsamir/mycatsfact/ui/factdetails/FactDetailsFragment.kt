@@ -10,8 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.mdshahsamir.mycatsfact.R
 import com.mdshahsamir.mycatsfact.databinding.FragmentFactDetailsBinding
 import com.mdshahsamir.mycatsfact.model.Animal
+import com.mdshahsamir.mycatsfact.model.Cat
 import com.mdshahsamir.mycatsfact.utils.getDottedText
 
 class FactDetailsFragment : Fragment() {
@@ -38,13 +40,17 @@ class FactDetailsFragment : Fragment() {
     }
 
     private fun populateDate() {
+        (viewModel.animal as Cat).let {
+
+        }
         binding.animalNameTextView.text = viewModel.animal.name
         binding.animalFactTextView.text = viewModel.animal.fact
 
         binding.animalBreedTextView.text = getDottedText(
-            listOf(viewModel.animal.breed,
-                viewModel.animal.age.toString(),
-                viewModel.animal.weight.toString()
+            listOf(
+                getString(R.string.breed) + viewModel.animal.breed,
+                getString(R.string.age) + viewModel.animal.age.toString(),
+                getString(R.string.weight) + viewModel.animal.weight.toString()
             )
         )
 
