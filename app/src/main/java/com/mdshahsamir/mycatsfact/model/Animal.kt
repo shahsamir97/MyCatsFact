@@ -11,4 +11,10 @@ open class Animal(
      var weight : Double = 4.0,
      var imageLink : String = "",
      var fact : String = ""
-    ) : Parcelable
+    ) : Parcelable, AnimalActivities {
+     override fun animalSound(): String = "sound"
+
+     override fun animalFavoriteFood(): String = "food"
+
+     override fun animalSleepCycle(): String = "sleep"
+}

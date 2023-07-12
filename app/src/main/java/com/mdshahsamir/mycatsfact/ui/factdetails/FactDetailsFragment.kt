@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -11,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.mdshahsamir.mycatsfact.databinding.FragmentFactDetailsBinding
 import com.mdshahsamir.mycatsfact.model.Animal
+import com.mdshahsamir.mycatsfact.utils.getDottedText
 
 class FactDetailsFragment : Fragment() {
 
@@ -38,7 +40,26 @@ class FactDetailsFragment : Fragment() {
     private fun populateDate() {
         binding.animalNameTextView.text = viewModel.animal.name
         binding.animalFactTextView.text = viewModel.animal.fact
-        binding.animalBreedTextView.text = viewModel.animal.breed
+
+        binding.animalBreedTextView.text = getDottedText(
+            listOf(viewModel.animal.breed,
+                viewModel.animal.age.toString(),
+                viewModel.animal.weight.toString()
+            )
+        )
+
         Glide.with(requireContext()).load(viewModel.animal.imageLink).into(binding.animalImageView)
+
+        binding.eatButton.setOnClickListener {
+            Toast.makeText(requireContext(), viewModel.animal.animalFavoriteFood(), Toast.LENGTH_SHORT).show()
+        }
+
+        binding.sleepButton.setOnClickListener {
+            Toast.makeText(requireContext(),  viewModel.animal.animalSleepCycle() , Toast.LENGTH_SHORT).show()
+        }
+
+        binding.soundButton.setOnClickListener {
+            Toast.makeText(requireContext(),  viewModel.animal.animalSound(), Toast.LENGTH_SHORT).show()
+        }
     }
 }
