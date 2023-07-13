@@ -40,9 +40,6 @@ class FactDetailsFragment : Fragment() {
     }
 
     private fun populateDate() {
-        (viewModel.animal as Cat).let {
-
-        }
         binding.animalNameTextView.text = viewModel.animal.name
         binding.animalFactTextView.text = viewModel.animal.fact
 
