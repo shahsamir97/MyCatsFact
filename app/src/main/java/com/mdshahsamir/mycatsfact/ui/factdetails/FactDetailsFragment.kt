@@ -7,13 +7,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.mdshahsamir.mycatsfact.R
 import com.mdshahsamir.mycatsfact.databinding.FragmentFactDetailsBinding
-import com.mdshahsamir.mycatsfact.model.Animal
-import com.mdshahsamir.mycatsfact.model.Cat
 import com.mdshahsamir.mycatsfact.utils.getDottedText
 
 class FactDetailsFragment : Fragment() {
