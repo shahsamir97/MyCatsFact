@@ -1,5 +1,6 @@
 package com.mdshahsamir.mycatsfact.ui.factslist
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -47,7 +48,8 @@ class FactsListFragment : Fragment(), FactListItemActions {
     }
 
     private fun initRecyclerView(){
-        binding.factRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+        val columns = if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 2
+        binding.factRecyclerView.layoutManager = GridLayoutManager(requireContext(), columns)
         binding.factRecyclerView.adapter = adapter
 
         binding.factRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {

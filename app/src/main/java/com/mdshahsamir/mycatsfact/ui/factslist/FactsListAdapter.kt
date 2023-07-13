@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mdshahsamir.mycatsfact.databinding.FactListItemBinding
 import com.mdshahsamir.mycatsfact.model.Animal
+import com.mdshahsamir.mycatsfact.model.Cat
 
 class FactsListAdapter(private val factListItemActions: FactListItemActions) :
     RecyclerView.Adapter<FactsListAdapter.FactViewHolder>() {
@@ -16,10 +17,12 @@ class FactsListAdapter(private val factListItemActions: FactListItemActions) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(animal: Animal) {
-            binding.animalNameTextView.text = animal.name
-            binding.animalFactTextView.text = animal.fact
-            Glide.with(binding.root.context).load(animal.imageLink).into(binding.animaImageView)
-            binding.root.setOnClickListener { factListItemActions.onClick(animal) }
+            (animal as Cat).let {cat ->
+                binding.animalNameTextView.text = cat.name
+                binding.animalFactTextView.text = cat.fact
+                Glide.with(binding.root.context).load(cat.imageLink).into(binding.animaImageView)
+                binding.root.setOnClickListener { factListItemActions.onClick(cat) }
+            }
         }
     }
 

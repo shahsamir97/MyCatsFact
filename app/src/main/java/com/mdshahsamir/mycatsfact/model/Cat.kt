@@ -1,6 +1,10 @@
 package com.mdshahsamir.mycatsfact.model
 
-class Cat: Animal(){
+class Cat(
+    var name: String = "",
+    var fact: String = "",
+    var imageLink: String = "",
+) : Animal() {
     override fun animalSound(): String = "Meawww"
 
     override fun animalFavoriteFood(): String = "Fish"
