@@ -53,16 +53,15 @@ class FactsListFragment : Fragment(), FactListItemActions {
         binding.factRecyclerView.adapter = adapter
 
         binding.factRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
-
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
+
                 if (!viewModel.isDataLoading.value!!) {
-                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.catLiveData.value?.size?.minus(1)) {
-                        //bottom of list!
+                    if (linearLayoutManager != null
+                        && linearLayoutManager.findLastCompletelyVisibleItemPosition()
+                        == viewModel.catLiveData.value?.size?.minus(1)) {
+
                         viewModel.loadMore()
                     }
                 }
