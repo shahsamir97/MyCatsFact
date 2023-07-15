@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.lang.IllegalArgumentException
 
-class FactListViewModelFactory(private val factListRepository: FactListRepository) : ViewModelProvider.Factory {
+class FactListViewModelFactory(private val factListRepository: FactListRepository)
+    : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(FactsListViewModel::class.java)) {

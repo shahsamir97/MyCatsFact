@@ -17,19 +17,20 @@ import com.mdshahsamir.mycatsfact.utils.getDottedText
 
 class FactDetailsFragment : Fragment() {
 
-    private lateinit var binding : FragmentFactDetailsBinding
-    private val args : FactDetailsFragmentArgs by navArgs()
+    private lateinit var binding: FragmentFactDetailsBinding
+    private val args: FactDetailsFragmentArgs by navArgs()
 
-    private val viewModel : FactDetailsViewModel by viewModels() {
+    private val viewModel: FactDetailsViewModel by viewModels {
         FactDetailsViewModelFactory(args.animal)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentFactDetailsBinding.inflate(inflater, container, false)
-        sharedElementEnterTransition = TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
+        sharedElementEnterTransition =
+            TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
 
         return binding.root
     }
@@ -54,28 +55,18 @@ class FactDetailsFragment : Fragment() {
             )
 
             binding.animalImageView.transitionName = cat.imageLink
-            Glide.with(requireContext()).load(cat.imageLink)
-                .into(binding.animalImageView)
+            Glide.with(requireContext()).load(cat.imageLink).into(binding.animalImageView)
 
             binding.eatButton.setOnClickListener {
-                Toast.makeText(
-                    requireContext(),
-                    cat.animalFavoriteFood(),
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(requireContext(), cat.animalFavoriteFood(), Toast.LENGTH_SHORT).show()
             }
 
             binding.sleepButton.setOnClickListener {
-                Toast.makeText(
-                    requireContext(),
-                    cat.animalSleepCycle(),
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(requireContext(), cat.animalSleepCycle(), Toast.LENGTH_SHORT).show()
             }
 
             binding.soundButton.setOnClickListener {
-                Toast.makeText(requireContext(), cat.animalSound(), Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(requireContext(), cat.animalSound(), Toast.LENGTH_SHORT).show()
             }
         }
     }

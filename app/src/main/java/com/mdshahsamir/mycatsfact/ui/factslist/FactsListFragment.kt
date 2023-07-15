@@ -19,7 +19,6 @@ import com.mdshahsamir.mycatsfact.model.Animal
 import com.mdshahsamir.mycatsfact.model.Cat
 import com.mdshahsamir.mycatsfact.networking.catApiService
 
-
 class FactsListFragment : Fragment(), FactListItemActions {
 
     private lateinit var binding: FragmentFactsListBinding
