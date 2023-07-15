@@ -55,7 +55,7 @@ class FactDetailsFragment : Fragment() {
             )
 
             binding.animalImageView.transitionName = cat.imageLink
-            Glide.with(requireContext()).load(cat.imageLink).into(binding.animalImageView)
+            Glide.with(requireContext()).load(cat.imageLink).dontAnimate().into(binding.animalImageView)
 
             binding.eatButton.setOnClickListener {
                 Toast.makeText(requireContext(), cat.animalFavoriteFood(), Toast.LENGTH_SHORT).show()
