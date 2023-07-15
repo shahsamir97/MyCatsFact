@@ -27,12 +27,14 @@ class FactsListViewModel(private val factListRepository: FactListRepository) : V
 
     private fun populateData() {
         _isDataLoading.value = true
-        val data = generateCatData(10, offset)
+        val data = generateCatData(20, offset)
+
         viewModelScope.launch {
             data.forEach {
                 val fact = factListRepository.getCatFact()
                 it.fact = fact.fact
             }
+            data.distinctBy { it.fact }
             _catLiveData.postValue(data)
             _isDataLoading.postValue(false)
         }
@@ -43,12 +45,15 @@ class FactsListViewModel(private val factListRepository: FactListRepository) : V
         _isDataLoading.value = true
         viewModelScope.launch {
             val newData = generateCatData(10, offset)
+
             newData.forEach {
                 val fact = factListRepository.getCatFact()
                 it.fact = fact.fact
             }
+
             val previousData = _catLiveData.value as ArrayList<Cat>
             previousData.addAll(newData)
+            previousData.distinctBy { it.fact }
             _catLiveData.value = previousData
             _isDataLoading.postValue(false)
         }

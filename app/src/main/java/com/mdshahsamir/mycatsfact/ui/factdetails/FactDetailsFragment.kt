@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import androidx.transition.TransitionInflater
 import com.bumptech.glide.Glide
 import com.mdshahsamir.mycatsfact.R
 import com.mdshahsamir.mycatsfact.databinding.FragmentFactDetailsBinding
@@ -28,17 +29,18 @@ class FactDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFactDetailsBinding.inflate(inflater, container, false)
+        sharedElementEnterTransition = TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
+
         return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         populateDate()
     }
 
     private fun populateDate() {
-
         (viewModel.animal as Cat).let { cat ->
             binding.animalNameTextView.text = cat.name
             binding.animalFactTextView.text = cat.fact
@@ -51,6 +53,7 @@ class FactDetailsFragment : Fragment() {
                 )
             )
 
+            binding.animalImageView.transitionName = cat.imageLink
             Glide.with(requireContext()).load(cat.imageLink)
                 .into(binding.animalImageView)
 

@@ -20,8 +20,9 @@ class FactsListAdapter(private val factListItemActions: FactListItemActions) :
             (animal as Cat).let {cat ->
                 binding.animalNameTextView.text = cat.name
                 binding.animalFactTextView.text = cat.fact
+                binding.animaImageView.transitionName = cat.imageLink
                 Glide.with(binding.root.context).load(cat.imageLink).into(binding.animaImageView)
-                binding.root.setOnClickListener { factListItemActions.onClick(cat) }
+                binding.root.setOnClickListener { factListItemActions.onClick(cat, binding.animaImageView) }
             }
         }
     }

@@ -5,14 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mdshahsamir.mycatsfact.databinding.FragmentFactsListBinding
 import com.mdshahsamir.mycatsfact.model.Animal
+import com.mdshahsamir.mycatsfact.model.Cat
 import com.mdshahsamir.mycatsfact.networking.catApiService
 
 
@@ -39,6 +43,7 @@ class FactsListFragment : Fragment(), FactListItemActions {
 
     private fun initObservers() {
         viewModel.catLiveData.observe(viewLifecycleOwner){
+            binding.factRecyclerView.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
             adapter.submitData(it)
         }
 
@@ -67,10 +72,19 @@ class FactsListFragment : Fragment(), FactListItemActions {
                 }
             }
         })
+
+        postponeEnterTransition()
+        binding.factRecyclerView.doOnPreDraw {
+            startPostponedEnterTransition()
+        }
     }
 
-    override fun onClick(animal: Animal) {
+    override fun onClick(animal: Animal, view: View) {
+        val extraInfoForSharedElement = FragmentNavigatorExtras(
+            view as ImageView to (animal as Cat).imageLink
+        )
+
         val action = FactsListFragmentDirections.actionFactsListFragmentToFactDetailsFragment(animal)
-        findNavController().navigate(action)
+        findNavController().navigate(action, extraInfoForSharedElement)
     }
 }
