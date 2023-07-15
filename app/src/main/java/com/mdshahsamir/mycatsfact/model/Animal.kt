@@ -9,6 +9,7 @@ open class Animal(
      var age : Int = 2,
      var weight : Double = 4.0,
     ) : Parcelable, AnimalActivities {
+
      override fun animalSound(): String = "sound"
 
      override fun animalFavoriteFood(): String = "food"
