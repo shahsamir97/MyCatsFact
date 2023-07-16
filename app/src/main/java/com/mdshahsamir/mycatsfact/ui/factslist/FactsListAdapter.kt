@@ -17,7 +17,7 @@ class FactsListAdapter(private val factListItemActions: FactListItemActions) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(animal: Animal) {
-            (animal as Cat).let {cat ->
+            (animal as Cat).let { cat ->
                 binding.animalNameTextView.text = cat.name
                 binding.animalFactTextView.text = cat.fact
                 binding.animaImageView.transitionName = cat.imageLink

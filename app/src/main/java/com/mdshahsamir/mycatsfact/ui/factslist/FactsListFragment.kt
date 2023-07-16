@@ -62,10 +62,10 @@ class FactsListFragment : Fragment(), FactListItemActions {
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
 
                 if (!viewModel.isDataLoading.value!!) {
+
                     if (linearLayoutManager != null
                         && linearLayoutManager.findLastCompletelyVisibleItemPosition()
                         == viewModel.catLiveData.value?.size?.minus(1)) {
-
                         viewModel.loadMore()
                     }
                 }
