@@ -10,6 +10,8 @@ open class Animal(
      var weight : Double = 4.0,
     ) : Parcelable, AnimalActivities {
 
+    open fun uniqueKey(): String = hashCode().toString()
+
      override fun animalSound(): String = "sound"
 
      override fun animalFavoriteFood(): String = "food"

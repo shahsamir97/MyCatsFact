@@ -5,6 +5,11 @@ class Cat(
     var fact: String = "",
     var imageLink: String = "",
 ) : Animal() {
+
+    override fun uniqueKey(): String {
+        return fact
+    }
+
     override fun animalSound(): String = "Meawww"
 
     override fun animalFavoriteFood(): String = "Fish"

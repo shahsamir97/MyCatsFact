@@ -2,6 +2,7 @@ package com.mdshahsamir.mycatsfact.ui.factslist
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mdshahsamir.mycatsfact.databinding.FragmentFactsListBinding
 import com.mdshahsamir.mycatsfact.model.Animal
 import com.mdshahsamir.mycatsfact.model.Cat
@@ -22,7 +24,8 @@ import com.mdshahsamir.mycatsfact.networking.catApiService
 class FactsListFragment : Fragment(), FactListItemActions {
 
     private lateinit var binding: FragmentFactsListBinding
-    private val adapter = FactsListAdapter(this)
+    private val adapter by lazy {  FactsListAdapter(this, Glide.with(requireContext())) }
+    private var gridLayoutNumberOfColumns = 2
 
     private val viewModel : FactsListViewModel by viewModels {
         FactListViewModelFactory(FactListRepository(catApiService))
@@ -35,37 +38,48 @@ class FactsListFragment : Fragment(), FactListItemActions {
         binding = FragmentFactsListBinding.inflate(inflater, container, false)
 
         initRecyclerView()
-        initObservers()
+
+        Log.i(this.javaClass.simpleName, "OnCreate")
 
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initObservers()
+        Log.i(this.javaClass.simpleName, "OnView Created")
+
+    }
+
     private fun initObservers() {
-        viewModel.catLiveData.observe(viewLifecycleOwner){
+        viewModel.catLiveData.observe(viewLifecycleOwner) {
             binding.factRecyclerView.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
-            adapter.submitData(it)
+            adapter.submitList(it)
         }
 
-        viewModel.isDataLoading.observe(viewLifecycleOwner){
+        viewModel.isDataLoading.observe(viewLifecycleOwner) {
             binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
         }
     }
 
-    private fun initRecyclerView(){
-        val columns = if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 2
-        binding.factRecyclerView.layoutManager = GridLayoutManager(requireContext(), columns)
-        binding.factRecyclerView.adapter = adapter
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        gridLayoutNumberOfColumns = if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 2
+        binding.factRecyclerView.layoutManager = GridLayoutManager(requireContext(), gridLayoutNumberOfColumns)
+    }
 
+    private fun initRecyclerView() {
+        binding.factRecyclerView.layoutManager = GridLayoutManager(requireContext(), gridLayoutNumberOfColumns)
+        binding.factRecyclerView.adapter = adapter
         binding.factRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
 
                 if (!viewModel.isDataLoading.value!!) {
-
                     if (linearLayoutManager != null
-                        && linearLayoutManager.findLastCompletelyVisibleItemPosition()
-                        == viewModel.catLiveData.value?.size?.minus(1)) {
+                        && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.catLiveData.value?.size?.minus(1)) {
                         viewModel.loadMore()
                     }
                 }

@@ -1,46 +1,52 @@
 package com.mdshahsamir.mycatsfact.ui.factslist
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.mdshahsamir.mycatsfact.databinding.FactListItemBinding
 import com.mdshahsamir.mycatsfact.model.Animal
 import com.mdshahsamir.mycatsfact.model.Cat
 
-class FactsListAdapter(private val factListItemActions: FactListItemActions) :
-    RecyclerView.Adapter<FactsListAdapter.FactViewHolder>() {
+class FactsListAdapter(
+    private val factListItemActions: FactListItemActions,
+    private val glideRequestManager: RequestManager,
+) : ListAdapter<Animal, FactsListAdapter.CatFactViewHolder>(FactDiffUtil) {
 
-    private var data: List<Animal> = ArrayList()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatFactViewHolder {
+        val binding = FactListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-    inner class FactViewHolder(private val binding: FactListItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        return CatFactViewHolder(binding)
+    }
 
-        fun bind(animal: Animal) {
-            (animal as Cat).let { cat ->
+    override fun onBindViewHolder(holder: CatFactViewHolder, position: Int) {
+        holder.bind(getItem(position) as Cat)
+    }
+
+    inner class CatFactViewHolder(private val binding: FactListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(cat: Cat) {
+            cat.also { cat ->
                 binding.animalNameTextView.text = cat.name
                 binding.animalFactTextView.text = cat.fact
                 binding.animaImageView.transitionName = cat.imageLink
-                Glide.with(binding.root.context).load(cat.imageLink).into(binding.animaImageView)
+                glideRequestManager.load(cat.imageLink).into(binding.animaImageView)
                 binding.root.setOnClickListener { factListItemActions.onClick(cat, binding.animaImageView) }
             }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FactViewHolder {
-        val binding =
-            FactListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return FactViewHolder(binding)
-    }
+    companion object FactDiffUtil : DiffUtil.ItemCallback<Animal>() {
+        override fun areItemsTheSame(oldItem: Animal, newItem: Animal): Boolean {
+            return oldItem.uniqueKey() == newItem.uniqueKey()
+        }
 
-    override fun getItemCount(): Int = data.size
+        @SuppressLint("DiffUtilEquals")
+        override fun areContentsTheSame(oldItem: Animal, newItem: Animal): Boolean {
+            return oldItem === newItem
+        }
 
-    override fun onBindViewHolder(holder: FactViewHolder, position: Int) {
-        holder.bind(data[position])
-    }
-
-    fun submitData(data: List<Animal>) {
-        this.data = data
-        notifyDataSetChanged()
     }
 }
