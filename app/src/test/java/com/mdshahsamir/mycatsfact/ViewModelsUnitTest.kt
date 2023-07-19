@@ -1,27 +1,27 @@
 package com.mdshahsamir.mycatsfact
 
+import com.mdshahsamir.mycatsfact.model.Cat
 import com.mdshahsamir.mycatsfact.model.Fact
-import com.mdshahsamir.mycatsfact.networking.CatApiService
+import com.mdshahsamir.mycatsfact.ui.factdetails.FactDetailsViewModel
 import com.mdshahsamir.mycatsfact.ui.factslist.FactListRepository
 import com.mdshahsamir.mycatsfact.ui.factslist.FactsListViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-val DUMMY_FACT = Fact("Dummy Fact", length = 10)
-
-object FakeFactListRepositoryImpl : FactListRepository {
-
-    override suspend fun getCatFact() = Fact("Dummy", 1)
-}
-
 class ViewModelsUnitTest {
 
     @Test
-    fun viewModelA_loadsUsers_showsFirstUser() {
-        // Given a VM using fake data
-        val viewModel = FactsListViewModel(FakeFactListRepositoryImpl) // Kicks off data load on init
+    fun factsViewModel_loadsUsers_showsAllFact() {
+        val viewModel = FactsListViewModel(FakeFactListRepositoryImpl)
 
-        // Verify that the exposed data is correct
         assertEquals(viewModel.catLiveData., 10)
+    }
+
+    @Test
+    fun factDetailsViewModel_haveAnimalData(){
+        val viewModel = FactDetailsViewModel(Cat())
+        assertEquals(viewModel.animal.age, 2)
+        assertEquals(viewModel.animal.breed, "Persian")
+        assertEquals((viewModel.animal).animalSound(), "Meawww")
     }
 }
