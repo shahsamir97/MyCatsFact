@@ -28,7 +28,7 @@ class FactsListFragment : Fragment(), FactListItemActions {
     private var gridLayoutNumberOfColumns = 2
 
     private val viewModel : FactsListViewModel by viewModels {
-        FactListViewModelFactory(FactListRepository(catApiService))
+        FactListViewModelFactory(FactListRepositoryImpl(catApiService))
     }
 
     override fun onCreateView(

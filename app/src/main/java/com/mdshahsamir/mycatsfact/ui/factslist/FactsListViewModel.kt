@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mdshahsamir.mycatsfact.model.Animal
 import com.mdshahsamir.mycatsfact.model.Cat
+import com.mdshahsamir.mycatsfact.model.Fact
 import com.mdshahsamir.mycatsfact.testdata.generateCatData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,7 +27,7 @@ class FactsListViewModel(private val factListRepository: FactListRepository) : V
         populateData()
     }
 
-    private fun populateData() {
+     fun populateData() {
         _isDataLoading.value = true
         val data = generateCatData(10, offset)
 

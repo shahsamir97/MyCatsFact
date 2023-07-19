@@ -9,3 +9,7 @@ fun getDottedText(list: List<String>): String {
 
     return dottedString
 }
+
+fun getRandomCatName() : String{
+    return catNames.random()
+}
