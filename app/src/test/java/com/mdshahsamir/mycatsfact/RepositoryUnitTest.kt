@@ -18,7 +18,6 @@ class RepositoryUnitTest {
     @Test
     fun factListRepository_getOneFactFromRemoteSource() = runTest {
         val fact = FakeFactListRepositoryImpl.getCatFact()
-        assertEquals(fact,DUMMY_FACT)
+        assertEquals(fact, DUMMY_FACT)
     }
-
 }
