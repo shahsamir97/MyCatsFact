@@ -45,4 +45,15 @@ class FactsListViewModelTest {
 
         viewModel.catLiveData.removeObserver(observer)
     }
+
+    @Test
+    fun factViewModel_loadMoreData() = runTest {
+        val observer = Observer<List<Animal>> {}
+        viewModel.loadMore()
+        viewModel.catLiveData.observeForever(observer)
+        val value = viewModel.catLiveData.value
+        assertEquals(20, value?.size)
+
+        viewModel.catLiveData.removeObserver(observer)
+    }
 }

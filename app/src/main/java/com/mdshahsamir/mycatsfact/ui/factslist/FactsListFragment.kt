@@ -39,8 +39,6 @@ class FactsListFragment : Fragment(), FactListItemActions {
 
         initRecyclerView()
 
-        Log.i(this.javaClass.simpleName, "OnCreate")
-
         return binding.root
     }
 
@@ -48,8 +46,6 @@ class FactsListFragment : Fragment(), FactListItemActions {
         super.onViewCreated(view, savedInstanceState)
 
         initObservers()
-        Log.i(this.javaClass.simpleName, "OnView Created")
-
     }
 
     private fun initObservers() {

@@ -36,6 +36,7 @@ class FactsListViewModel(private val factListRepository: FactListRepository) : V
                 val fact = factListRepository.getCatFact()
                 it.fact = fact.fact
             }
+
             data.distinctBy { it.fact }
             _catLiveData.postValue(data)
             _isDataLoading.postValue(false)
@@ -54,7 +55,6 @@ class FactsListViewModel(private val factListRepository: FactListRepository) : V
             }
 
             val previousData = _catLiveData.value?.toMutableList()?: mutableListOf()
-
             previousData.addAll(newData)
             previousData.distinctBy { it.uniqueKey() }
             _catLiveData.postValue(previousData)
