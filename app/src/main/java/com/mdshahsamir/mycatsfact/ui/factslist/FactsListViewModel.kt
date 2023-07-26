@@ -36,21 +36,13 @@ class FactsListViewModel(
     }
 
     fun loadMore() {
-//        offset += 10
-//        _isDataLoading.value = true
-//        viewModelScope.launch(Dispatchers.IO) {
-//            val newData = generateCatData(10, offset)
-//
-//            newData.forEach {
-//                val fact = factListRepositoryImpl.getCatFacts(newData)
-//                it.fact = fact
-//            }
-//
-//            val previousData = _catLiveData.value?.toMutableList()?: mutableListOf()
-//            previousData.addAll(newData)
-//            previousData.distinctBy { it.uniqueKey() }
-//            _catLiveData.postValue(previousData)
-//            _isDataLoading.postValue(false)
-//        }
+        offset += 10
+        _isDataLoading.value = true
+        val data = generateCatData(10, offset)
+
+        viewModelScope.launch {
+            factListRepositoryImpl.getMoreCatFacts(data)
+            _isDataLoading.postValue(false)
+        }
     }
 }

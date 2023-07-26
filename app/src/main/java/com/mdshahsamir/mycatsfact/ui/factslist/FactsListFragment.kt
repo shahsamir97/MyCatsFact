@@ -93,7 +93,7 @@ class FactsListFragment : Fragment(), FactListItemActions {
 
                 if (!viewModel.isDataLoading.value!!) {
                     if (linearLayoutManager != null
-                        && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.catLiveData.value?.size?.minus(
+                        && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.catFacts.value?.size?.minus(
                             1
                         )
                     ) {

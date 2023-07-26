@@ -12,6 +12,8 @@ import java.lang.Exception
 
 interface FactListRepository {
     suspend fun getCatFacts(cats: List<Cat>)
+
+    suspend fun getMoreCatFacts(cats: List<Cat>)
 }
 
 class FactListRepositoryImpl(
@@ -36,5 +38,20 @@ class FactListRepositoryImpl(
                 catDao.deleteAll()
                 catDao.insertAll(cats)
             }
+    }
+
+    override suspend fun getMoreCatFacts(cats: List<Cat>) {
+        try {
+            cats.forEach {
+                val fact = catApiService.getFact()
+                it.fact = fact.fact
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        withContext(Dispatchers.IO) {
+            catDao.insertAll(cats)
+        }
     }
 }
