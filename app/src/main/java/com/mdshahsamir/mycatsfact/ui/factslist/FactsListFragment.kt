@@ -1,6 +1,8 @@
 package com.mdshahsamir.mycatsfact.ui.factslist
 
+import android.content.Context
 import android.content.res.Configuration
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.mdshahsamir.mycatsfact.database.AppDatabase
 import com.mdshahsamir.mycatsfact.databinding.FragmentFactsListBinding
 import com.mdshahsamir.mycatsfact.model.Animal
 import com.mdshahsamir.mycatsfact.model.Cat
@@ -24,11 +27,20 @@ import com.mdshahsamir.mycatsfact.networking.catApiService
 class FactsListFragment : Fragment(), FactListItemActions {
 
     private lateinit var binding: FragmentFactsListBinding
-    private val adapter by lazy {  FactsListAdapter(this, Glide.with(requireContext())) }
+    private val adapter by lazy { FactsListAdapter(this, Glide.with(requireContext())) }
     private var gridLayoutNumberOfColumns = 2
 
-    private val viewModel : FactsListViewModel by viewModels {
-        FactListViewModelFactory(FactListRepositoryImpl(catApiService))
+    private val viewModel: FactsListViewModel by viewModels {
+        FactListViewModelFactory(
+            FactListRepositoryImpl(
+                catApiService,
+                AppDatabase.getDatabase(requireContext()).catDao()
+            )
+        )
+    }
+
+    private val connectivityManager: ConnectivityManager by lazy {
+        requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
     override fun onCreateView(
@@ -46,10 +58,13 @@ class FactsListFragment : Fragment(), FactListItemActions {
         super.onViewCreated(view, savedInstanceState)
 
         initObservers()
+        if(connectivityManager.activeNetwork != null) {
+            viewModel.populateData()
+        }
     }
 
     private fun initObservers() {
-        viewModel.catLiveData.observe(viewLifecycleOwner) {
+        viewModel.catFacts.observe(viewLifecycleOwner) {
             binding.factRecyclerView.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
             adapter.submitList(it)
         }
@@ -61,12 +76,15 @@ class FactsListFragment : Fragment(), FactListItemActions {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        gridLayoutNumberOfColumns = if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 2
-        binding.factRecyclerView.layoutManager = GridLayoutManager(requireContext(), gridLayoutNumberOfColumns)
+        gridLayoutNumberOfColumns =
+            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 2
+        binding.factRecyclerView.layoutManager =
+            GridLayoutManager(requireContext(), gridLayoutNumberOfColumns)
     }
 
     private fun initRecyclerView() {
-        binding.factRecyclerView.layoutManager = GridLayoutManager(requireContext(), gridLayoutNumberOfColumns)
+        binding.factRecyclerView.layoutManager =
+            GridLayoutManager(requireContext(), gridLayoutNumberOfColumns)
         binding.factRecyclerView.adapter = adapter
         binding.factRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -75,7 +93,10 @@ class FactsListFragment : Fragment(), FactListItemActions {
 
                 if (!viewModel.isDataLoading.value!!) {
                     if (linearLayoutManager != null
-                        && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.catLiveData.value?.size?.minus(1)) {
+                        && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.catLiveData.value?.size?.minus(
+                            1
+                        )
+                    ) {
                         viewModel.loadMore()
                     }
                 }
@@ -93,7 +114,8 @@ class FactsListFragment : Fragment(), FactListItemActions {
             view as ImageView to (animal as Cat).imageLink
         )
 
-        val action = FactsListFragmentDirections.actionFactsListFragmentToFactDetailsFragment(animal)
+        val action =
+            FactsListFragmentDirections.actionFactsListFragmentToFactDetailsFragment(animal)
         findNavController().navigate(action, extraInfoForSharedElement)
     }
 }
