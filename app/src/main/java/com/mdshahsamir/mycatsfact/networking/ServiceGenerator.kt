@@ -1,12 +1,11 @@
 package com.mdshahsamir.mycatsfact.networking
 
+import com.mdshahsamir.mycatsfact.BuildConfig
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-private const val BASE_URL = "https://catfact.ninja/"
-
 private var retrofit = Retrofit.Builder()
-    .baseUrl(BASE_URL)
+    .baseUrl(BuildConfig.BASE_URL)
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 
