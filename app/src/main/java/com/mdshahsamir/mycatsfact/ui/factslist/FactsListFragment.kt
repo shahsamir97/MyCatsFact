@@ -4,14 +4,13 @@ import android.content.Context
 import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.SearchView
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -59,22 +58,36 @@ class FactsListFragment : Fragment(), FactListItemActions {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        val searchItem = menu.findItem(R.id.app_bar_search)
+        val searchView = searchItem.actionView as androidx.appcompat.widget.SearchView
 
-        val searchView: SearchView = menu.findItem(R.id.app_bar_search)?.getActionView() as SearchView
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                Log.i("QueryText:::", query.toString())
+                viewModel.filterCats(query!!)
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrEmpty()) {
+                    viewModel.populateData()
+                }
                 return true
             }
         })
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.app_bar_search -> {
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
 
         initObservers()
         if(connectivityManager.activeNetwork != null) {
@@ -90,6 +103,11 @@ class FactsListFragment : Fragment(), FactListItemActions {
 
         viewModel.isDataLoading.observe(viewLifecycleOwner) {
             binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
+        }
+
+        viewModel.filteredFacts.observe(viewLifecycleOwner) {
+            binding.factRecyclerView.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
+            adapter.submitList(it)
         }
     }
 

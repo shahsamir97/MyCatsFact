@@ -17,6 +17,9 @@ interface CatDao {
     @Query("SELECT * FROM cat")
     fun fetchAll() : Flow<List<Cat>>
 
+    @Query("SELECT * FROM cat WHERE name LIKE '%' || :query || '%' OR breed = :query")
+    fun filterCats(query: String) : List<Cat>
+
     @Query("DELETE FROM cat")
     fun deleteAll()
 
