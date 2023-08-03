@@ -21,6 +21,8 @@ class FactListRepositoryImpl(
 
     val catsFact = catDao.fetchAll()
 
+    suspend fun fetchFilteredCat(query: String) = withContext(Dispatchers.IO){ catDao.filterCats(query) }
+
     override suspend fun getCatFacts(cats: List<Cat>) {
         try {
             val uniqueFacts: SortedSet<Cat> = sortedSetOf()
