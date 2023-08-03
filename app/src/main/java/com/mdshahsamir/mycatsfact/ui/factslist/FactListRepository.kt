@@ -27,12 +27,12 @@ class FactListRepositoryImpl(
             cats.forEach {
                 val fact = catApiService.getFact()
                 it.fact = fact.fact
-                uniqueFacts.add(it) // Add each cat to the sorted set
+                uniqueFacts.add(it)
             }
 
             withContext(Dispatchers.IO) {
                 catDao.deleteAll()
-                catDao.insertAll(uniqueFacts.toList()) // Convert the SortedSet to a List and insert into the database
+                catDao.insertAll(uniqueFacts.toList())
             }
         } catch (e: Exception) {
             e.printStackTrace()
