@@ -5,6 +5,7 @@ import com.mdshahsamir.mycatsfact.database.CatDao
 import com.mdshahsamir.mycatsfact.model.Cat
 import com.mdshahsamir.mycatsfact.model.Fact
 import com.mdshahsamir.mycatsfact.networking.CatApiService
+import com.mdshahsamir.mycatsfact.networking.RemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.withContext
@@ -17,7 +18,7 @@ interface FactListRepository {
 }
 
 class FactListRepositoryImpl(
-    private val catApiService: CatApiService,
+    private val remoteDataSource: RemoteDataSource,
     private val catDao: CatDao,
 ) : FactListRepository {
 
@@ -26,10 +27,11 @@ class FactListRepositoryImpl(
     override suspend fun getCatFacts(cats: List<Cat>) {
             try {
                 cats.forEach {
-                    val fact = catApiService.getFact()
-                    it.fact = fact.fact
+                    val fact = remoteDataSource.fetchFact()
+                    if (fact.isSuccess){
+                        it.fact = fact.getOrThrow().fact
+                    }
                 }
-                catDao.deleteAll()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -43,8 +45,10 @@ class FactListRepositoryImpl(
     override suspend fun getMoreCatFacts(cats: List<Cat>) {
         try {
             cats.forEach {
-                val fact = catApiService.getFact()
-                it.fact = fact.fact
+                val fact = remoteDataSource.fetchFact()
+                if (fact.isSuccess){
+                    it.fact = fact.getOrThrow().fact
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()

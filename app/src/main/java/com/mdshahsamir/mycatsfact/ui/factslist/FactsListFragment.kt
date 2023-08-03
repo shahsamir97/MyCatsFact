@@ -22,6 +22,7 @@ import com.mdshahsamir.mycatsfact.database.AppDatabase
 import com.mdshahsamir.mycatsfact.databinding.FragmentFactsListBinding
 import com.mdshahsamir.mycatsfact.model.Animal
 import com.mdshahsamir.mycatsfact.model.Cat
+import com.mdshahsamir.mycatsfact.networking.RemoteDataSource
 import com.mdshahsamir.mycatsfact.networking.catApiService
 
 class FactsListFragment : Fragment(), FactListItemActions {
@@ -33,7 +34,7 @@ class FactsListFragment : Fragment(), FactListItemActions {
     private val viewModel: FactsListViewModel by viewModels {
         FactListViewModelFactory(
             FactListRepositoryImpl(
-                catApiService,
+                RemoteDataSource(),
                 AppDatabase.getDatabase(requireContext()).catDao()
             )
         )
