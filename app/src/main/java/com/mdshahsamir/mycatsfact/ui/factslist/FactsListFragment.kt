@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,14 +17,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.mdshahsamir.mycatsfact.MainApplication
 import com.mdshahsamir.mycatsfact.database.AppDatabase
 import com.mdshahsamir.mycatsfact.database.CatDao
 import com.mdshahsamir.mycatsfact.databinding.FragmentFactsListBinding
 import com.mdshahsamir.mycatsfact.model.Animal
 import com.mdshahsamir.mycatsfact.model.Cat
 import com.mdshahsamir.mycatsfact.networking.RemoteDataSource
-import com.mdshahsamir.mycatsfact.networking.catApiService
 
 //Object locator
 class ServiceLocator(private val context: Context) {
