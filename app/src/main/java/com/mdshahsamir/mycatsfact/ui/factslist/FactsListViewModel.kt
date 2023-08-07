@@ -10,10 +10,10 @@ import com.mdshahsamir.mycatsfact.testdata.generateCatData
 import kotlinx.coroutines.launch
 
 class FactsListViewModel(
-    private val factListRepositoryImpl: FactListRepositoryImpl,
+    private val factListRepository: FactListRepository,
 ) : ViewModel() {
 
-    val catFacts = factListRepositoryImpl.catsFact.asLiveData()
+    fun catFacts() = factListRepository.getCatFacts().asLiveData()
 
     private val _catLiveData = MutableLiveData<List<Animal>>()
             val  catLiveData : LiveData<List<Animal>>
@@ -30,7 +30,7 @@ class FactsListViewModel(
         val data = generateCatData(10, offset)
 
         viewModelScope.launch {
-             factListRepositoryImpl.getCatFacts(data)
+             factListRepository.fetchCatFacts(data)
             _isDataLoading.postValue(false)
         }
     }
@@ -41,7 +41,7 @@ class FactsListViewModel(
         val data = generateCatData(10, offset)
 
         viewModelScope.launch {
-            factListRepositoryImpl.getMoreCatFacts(data)
+            factListRepository.fetchMoreCatFacts(data)
             _isDataLoading.postValue(false)
         }
     }

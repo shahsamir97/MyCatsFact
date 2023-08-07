@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,10 +18,25 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mdshahsamir.mycatsfact.database.AppDatabase
+import com.mdshahsamir.mycatsfact.database.CatDao
 import com.mdshahsamir.mycatsfact.databinding.FragmentFactsListBinding
 import com.mdshahsamir.mycatsfact.model.Animal
 import com.mdshahsamir.mycatsfact.model.Cat
-import com.mdshahsamir.mycatsfact.networking.catApiService
+import com.mdshahsamir.mycatsfact.networking.RemoteDataSource
+
+class ServiceLocator(private val context: Context) {
+    fun getFactListRepository(): FactListRepository {
+        return FactListRepositoryImpl(getRemoteDataSource(), getCatDao())
+    }
+
+    fun getRemoteDataSource(): RemoteDataSource {
+        return RemoteDataSource()
+    }
+
+    fun getCatDao(): CatDao {
+        return AppDatabase.getDatabase(context).catDao()
+    }
+}
 
 class FactsListFragment : Fragment(), FactListItemActions {
 
@@ -32,10 +46,7 @@ class FactsListFragment : Fragment(), FactListItemActions {
 
     private val viewModel: FactsListViewModel by viewModels {
         FactListViewModelFactory(
-            FactListRepositoryImpl(
-                catApiService,
-                AppDatabase.getDatabase(requireContext()).catDao()
-            )
+            ServiceLocator(requireContext()).getFactListRepository()
         )
     }
 
@@ -64,7 +75,7 @@ class FactsListFragment : Fragment(), FactListItemActions {
     }
 
     private fun initObservers() {
-        viewModel.catFacts.observe(viewLifecycleOwner) {
+        viewModel.catFacts().observe(viewLifecycleOwner) {
             binding.factRecyclerView.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
             adapter.submitList(it)
         }
@@ -93,7 +104,7 @@ class FactsListFragment : Fragment(), FactListItemActions {
 
                 if (!viewModel.isDataLoading.value!!) {
                     if (linearLayoutManager != null
-                        && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.catFacts.value?.size?.minus(
+                        && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.catFacts().value?.size?.minus(
                             1
                         )
                     ) {
