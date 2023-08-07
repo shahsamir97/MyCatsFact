@@ -1,14 +1,10 @@
 package com.mdshahsamir.mycatsfact.ui.factslist
 
-import android.net.ConnectivityManager
 import com.mdshahsamir.mycatsfact.database.CatDao
 import com.mdshahsamir.mycatsfact.model.Cat
-import com.mdshahsamir.mycatsfact.model.Fact
 import com.mdshahsamir.mycatsfact.networking.CatApiService
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 
 interface FactListRepository {
     suspend fun getCatFacts(cats: List<Cat>)
@@ -35,7 +31,6 @@ class FactListRepositoryImpl(
             }
 
             withContext(Dispatchers.IO) {
-                catDao.deleteAll()
                 catDao.insertAll(cats)
             }
     }

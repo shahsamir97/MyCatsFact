@@ -28,7 +28,7 @@ class FactsListViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = FactsListViewModel(FakeFactListRepositoryImpl, connectivityManager)
+        viewModel = FactsListViewModel(FakeFactListRepositoryImpl)
     }
 
     @After
