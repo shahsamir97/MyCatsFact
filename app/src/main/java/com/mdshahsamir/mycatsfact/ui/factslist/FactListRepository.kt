@@ -35,7 +35,6 @@ class FactListRepositoryImpl(
             }
 
             withContext(Dispatchers.IO) {
-                //catDao.deleteAll()
                 catDao.insertAll(cats)
             }
     }

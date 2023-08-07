@@ -29,11 +29,11 @@ class ServiceLocator(private val context: Context) {
         return FactListRepositoryImpl(getRemoteDataSource(), getCatDao())
     }
 
-    fun getRemoteDataSource(): RemoteDataSource {
+    private fun getRemoteDataSource(): RemoteDataSource {
         return RemoteDataSource()
     }
 
-    fun getCatDao(): CatDao {
+    private fun getCatDao(): CatDao {
         return AppDatabase.getDatabase(context).catDao()
     }
 }
