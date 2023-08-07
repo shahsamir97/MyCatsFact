@@ -24,7 +24,6 @@ import com.mdshahsamir.mycatsfact.model.Animal
 import com.mdshahsamir.mycatsfact.model.Cat
 import com.mdshahsamir.mycatsfact.networking.RemoteDataSource
 
-//Object locator
 class ServiceLocator(private val context: Context) {
     fun getFactListRepository(): FactListRepository {
         return FactListRepositoryImpl(getRemoteDataSource(), getCatDao())
@@ -37,9 +36,7 @@ class ServiceLocator(private val context: Context) {
     fun getCatDao(): CatDao {
         return AppDatabase.getDatabase(context).catDao()
     }
-
 }
-
 
 class FactsListFragment : Fragment(), FactListItemActions {
 
