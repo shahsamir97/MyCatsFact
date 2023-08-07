@@ -1,6 +1,5 @@
 package com.mdshahsamir.mycatsfact.ui.factslist
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -43,9 +42,8 @@ class FactsListAdapter(
             return oldItem.uniqueKey() == newItem.uniqueKey()
         }
 
-        @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: Animal, newItem: Animal): Boolean {
-            return oldItem === newItem
+            return oldItem == newItem
         }
     }
 }
