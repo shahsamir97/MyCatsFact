@@ -45,7 +45,7 @@ class FactsListAdapter(
 
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: Animal, newItem: Animal): Boolean {
-            return oldItem === newItem
+            return oldItem == newItem
         }
     }
 }

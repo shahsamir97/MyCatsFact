@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -61,19 +62,37 @@ class FactsListFragment : Fragment(), FactListItemActions {
         val searchItem = menu.findItem(R.id.app_bar_search)
         val searchView = searchItem.actionView as androidx.appcompat.widget.SearchView
 
-        searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object :
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.filterCats(query!!)
+                findCatsWithQueryString(query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrEmpty()) {
-                    viewModel.populateData()
+                    val cats = viewModel.catFacts.value
+                    binding.factRecyclerView.visibility = if (cats!!.isNotEmpty()) View.VISIBLE else View.GONE
+                    adapter.submitList(cats)
+                } else {
+                    findCatsWithQueryString(newText)
                 }
+
                 return true
             }
         })
+    }
+
+    private fun findCatsWithQueryString(queryText: String?) {
+        queryText?.let { queryString ->
+            val filteredCats: List<Cat> =
+                viewModel.catFacts.value!!.filter { it.name.contains(queryString, true) }
+            if (filteredCats.isEmpty()) {
+                viewModel.filterCats(queryString)
+            } else {
+                adapter.submitList(filteredCats)
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -81,6 +100,7 @@ class FactsListFragment : Fragment(), FactListItemActions {
             R.id.app_bar_search -> {
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -90,7 +110,7 @@ class FactsListFragment : Fragment(), FactListItemActions {
         setHasOptionsMenu(true)
 
         initObservers()
-        if(connectivityManager.activeNetwork != null) {
+        if (connectivityManager.activeNetwork != null) {
             viewModel.populateData()
         }
     }
@@ -127,22 +147,25 @@ class FactsListFragment : Fragment(), FactListItemActions {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
-
-                if (!viewModel.isDataLoading.value!!) {
-                    if (linearLayoutManager != null
-                        && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.catFacts.value?.size?.minus(
-                            1
-                        )
-                    ) {
-                        viewModel.loadMore()
-                    }
-                }
+                loadCatsOnScroll(linearLayoutManager)
             }
         })
 
         postponeEnterTransition()
         binding.factRecyclerView.doOnPreDraw {
             startPostponedEnterTransition()
+        }
+    }
+
+    private fun loadCatsOnScroll(linearLayoutManager: LinearLayoutManager?) {
+        if (!viewModel.isDataLoading.value!!) {
+            if (linearLayoutManager != null
+                && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.catFacts.value?.size?.minus(
+                    1
+                )
+            ) {
+                viewModel.loadMore()
+            }
         }
     }
 
