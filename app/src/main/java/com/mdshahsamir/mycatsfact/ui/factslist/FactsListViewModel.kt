@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mdshahsamir.mycatsfact.model.Animal
+import com.mdshahsamir.mycatsfact.model.Cat
 import com.mdshahsamir.mycatsfact.testdata.generateCatData
 import kotlinx.coroutines.launch
 
@@ -13,7 +14,13 @@ class FactsListViewModel(
     private val factListRepositoryImpl: FactListRepositoryImpl,
 ) : ViewModel() {
 
-    val catFacts = factListRepositoryImpl.catsFact.asLiveData()
+    val catFacts: LiveData<List<Cat>> = factListRepositoryImpl.catsFact.asLiveData()
+
+    private val _filteredFacts = MutableLiveData<List<Cat>>()
+    val filteredFacts: LiveData<List<Cat>>
+        get() = _filteredFacts
+
+
 
     private val _catLiveData = MutableLiveData<List<Animal>>()
             val  catLiveData : LiveData<List<Animal>>
@@ -24,6 +31,14 @@ class FactsListViewModel(
         get() = _isDataLoading
 
     private var offset: Int = 1
+
+    fun filterCats(query: String) {
+        _isDataLoading.value = true
+        viewModelScope.launch {
+            _filteredFacts.value = factListRepositoryImpl.fetchFilteredCat(query = query)
+        }
+        _isDataLoading.value = false
+    }
 
      fun populateData() {
         _isDataLoading.value = true
