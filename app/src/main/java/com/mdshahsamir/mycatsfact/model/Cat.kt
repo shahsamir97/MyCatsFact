@@ -20,7 +20,7 @@ data class Cat(
     override fun animalFavoriteFood(): String = "Fish"
 
     override fun animalSleepCycle(): String = "79 out of every 104 minutes"
-    override fun compareTo(otherCat: Cat): Int {
-        return if (otherCat.fact == this.fact) 0 else 1
+    override fun compareTo(other: Cat): Int {
+        return if (other.fact == this.fact) 0 else 1
     }
 }

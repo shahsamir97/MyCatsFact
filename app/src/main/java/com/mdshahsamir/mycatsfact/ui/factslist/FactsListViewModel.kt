@@ -16,14 +16,14 @@ class FactsListViewModel(
 
     val catFacts: LiveData<List<Cat>> = factListRepositoryImpl.catsFact.asLiveData()
 
+    var sortedCats = emptyList<Cat>()
+
     private val _filteredFacts = MutableLiveData<List<Cat>>()
     val filteredFacts: LiveData<List<Cat>>
         get() = _filteredFacts
 
-
-
     private val _catLiveData = MutableLiveData<List<Animal>>()
-            val  catLiveData : LiveData<List<Animal>>
+            val catLiveData : LiveData<List<Animal>>
                 get() = _catLiveData
 
     private val _isDataLoading = MutableLiveData(false)
@@ -59,5 +59,14 @@ class FactsListViewModel(
             factListRepositoryImpl.getMoreCatFacts(data)
             _isDataLoading.postValue(false)
         }
+    }
+
+     fun <R : Comparable<R>> sortCatsBy(
+        cats: List<Cat>,
+        selector: (Cat) -> R
+    ): List<Cat> {
+        sortedCats = cats.sortedBy(selector)
+
+        return sortedCats
     }
 }

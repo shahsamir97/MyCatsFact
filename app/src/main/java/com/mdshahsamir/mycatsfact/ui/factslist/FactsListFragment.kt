@@ -85,8 +85,18 @@ class FactsListFragment : Fragment(), FactListItemActions {
 
     private fun findCatsWithQueryString(queryText: String?) {
         queryText?.let { queryString ->
-            val filteredCats: List<Cat> =
-                viewModel.catFacts.value!!.filter { it.name.contains(queryString, true) }
+            val filteredCatsByName = viewModel.sortedCats
+                .filter {
+                    it.name.startsWith(queryString, ignoreCase = true)
+                }
+
+            val filteredCatsByFacts = viewModel.sortedCats
+                .filter {
+                    it.fact.contains(queryString, ignoreCase = true)
+                }
+
+            val filteredCats = (filteredCatsByName + filteredCatsByFacts).distinct()
+
             if (filteredCats.isEmpty()) {
                 viewModel.filterCats(queryString)
             } else {
@@ -98,6 +108,7 @@ class FactsListFragment : Fragment(), FactListItemActions {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.app_bar_search -> {
+
                 true
             }
 
@@ -117,6 +128,10 @@ class FactsListFragment : Fragment(), FactListItemActions {
 
     private fun initObservers() {
         viewModel.catFacts.observe(viewLifecycleOwner) {
+            viewModel.sortCatsBy(it) { cat ->
+                cat.name
+            }
+
             binding.factRecyclerView.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
             adapter.submitList(it)
         }
