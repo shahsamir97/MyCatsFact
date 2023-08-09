@@ -6,6 +6,9 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -18,6 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.mdshahsamir.mycatsfact.R
 import com.mdshahsamir.mycatsfact.database.AppDatabase
 import com.mdshahsamir.mycatsfact.databinding.FragmentFactsListBinding
 import com.mdshahsamir.mycatsfact.model.Animal
@@ -54,23 +58,91 @@ class FactsListFragment : Fragment(), FactListItemActions {
         return binding.root
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        val searchItem = menu.findItem(R.id.app_bar_search)
+        val searchView = searchItem.actionView as androidx.appcompat.widget.SearchView
+
+        searchView.setOnQueryTextListener(object :
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                findCatsWithQueryString(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrEmpty()) {
+                    val cats = viewModel.catFacts.value
+                    binding.factRecyclerView.visibility = if (cats!!.isNotEmpty()) View.VISIBLE else View.GONE
+                    adapter.submitList(cats)
+                } else {
+                    findCatsWithQueryString(newText)
+                }
+
+                return true
+            }
+        })
+    }
+
+    private fun findCatsWithQueryString(queryText: String?) {
+        queryText?.let { queryString ->
+            val filteredCatsByName = viewModel.sortedCats
+                .filter {
+                    it.name.startsWith(queryString, ignoreCase = true)
+                }
+
+            val filteredCatsByFacts = viewModel.sortedCats
+                .filter {
+                    it.fact.contains(queryString, ignoreCase = true)
+                }
+
+            val filteredCats = (filteredCatsByName + filteredCatsByFacts).distinct()
+
+            if (filteredCats.isEmpty()) {
+                viewModel.filterCats(queryString)
+            } else {
+                adapter.submitList(filteredCats)
+            }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.app_bar_search -> {
+
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
 
         initObservers()
-        if(connectivityManager.activeNetwork != null) {
+        if (connectivityManager.activeNetwork != null) {
             viewModel.populateData()
         }
     }
 
     private fun initObservers() {
         viewModel.catFacts.observe(viewLifecycleOwner) {
+            viewModel.sortCatsBy(it) { cat ->
+                cat.name
+            }
+
             binding.factRecyclerView.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
             adapter.submitList(it)
         }
 
         viewModel.isDataLoading.observe(viewLifecycleOwner) {
             binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
+        }
+
+        viewModel.filteredFacts.observe(viewLifecycleOwner) {
+            binding.factRecyclerView.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
+            adapter.submitList(it)
         }
     }
 
@@ -90,22 +162,25 @@ class FactsListFragment : Fragment(), FactListItemActions {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
-
-                if (!viewModel.isDataLoading.value!!) {
-                    if (linearLayoutManager != null
-                        && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.catFacts.value?.size?.minus(
-                            1
-                        )
-                    ) {
-                        viewModel.loadMore()
-                    }
-                }
+                loadCatsOnScroll(linearLayoutManager)
             }
         })
 
         postponeEnterTransition()
         binding.factRecyclerView.doOnPreDraw {
             startPostponedEnterTransition()
+        }
+    }
+
+    private fun loadCatsOnScroll(linearLayoutManager: LinearLayoutManager?) {
+        if (!viewModel.isDataLoading.value!!) {
+            if (linearLayoutManager != null
+                && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.catFacts.value?.size?.minus(
+                    1
+                )
+            ) {
+                viewModel.loadMore()
+            }
         }
     }
 
