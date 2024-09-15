@@ -6,12 +6,10 @@ import com.mdshahsamir.mycatsfact.model.Animal
 import com.mdshahsamir.mycatsfact.ui.factslist.FactsListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -30,7 +28,7 @@ class FactsListViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = FactsListViewModel(FakeFactListRepositoryImpl)
+        viewModel = FactsListViewModel(FakeFactListRepositoryImpl, connectivityManager)
     }
 
     @After
@@ -44,6 +42,17 @@ class FactsListViewModelTest {
         viewModel.catLiveData.observeForever(observer)
         val value = viewModel.catLiveData.value
         assertEquals(10, value?.size)
+
+        viewModel.catLiveData.removeObserver(observer)
+    }
+
+    @Test
+    fun factViewModel_loadMoreData() = runTest {
+        val observer = Observer<List<Animal>> {}
+        viewModel.loadMore()
+        viewModel.catLiveData.observeForever(observer)
+        val value = viewModel.catLiveData.value
+        assertEquals(20, value?.size)
 
         viewModel.catLiveData.removeObserver(observer)
     }

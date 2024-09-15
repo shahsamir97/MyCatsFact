@@ -47,6 +47,5 @@ class FactsListAdapter(
         override fun areContentsTheSame(oldItem: Animal, newItem: Animal): Boolean {
             return oldItem === newItem
         }
-
     }
 }

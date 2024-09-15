@@ -1,9 +1,14 @@
 package com.mdshahsamir.mycatsfact.model
 
-class Cat(
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
+data class Cat(
     var name: String = "",
-    var fact: String = "",
-    var imageLink: String = "",
+    @PrimaryKey var fact: String = "",
+    @ColumnInfo(name ="image_link") var imageLink: String = "",
 ) : Animal() {
 
     override fun uniqueKey(): String {

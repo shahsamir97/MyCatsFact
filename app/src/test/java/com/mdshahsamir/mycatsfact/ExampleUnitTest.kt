@@ -3,15 +3,10 @@ package com.mdshahsamir.mycatsfact
 import com.mdshahsamir.mycatsfact.testdata.generateCatData
 import com.mdshahsamir.mycatsfact.utils.getDottedText
 import com.mdshahsamir.mycatsfact.utils.getRandomCatName
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
-import org.junit.Assert.*
-
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
@@ -26,15 +21,15 @@ class ExampleUnitTest {
     @Test
     fun getCatDataValidator() {
         assertEquals(generateCatData(10, 0).size, 10)
-        assertEquals(generateCatData(0,0).size,0)
+        assertEquals(generateCatData(0, 0).size, 0)
         assertEquals(generateCatData(0, 10).size, 0)
     }
 
     @Test
     fun getDottedText_showsAListOfString_withDotsBetweenThem() {
-        assertEquals(getDottedText(listOf("Md","shah", "samir")),"Md • shah • samir")
-        assertEquals(getDottedText(listOf("Md")),"Md")
-        assertEquals(getDottedText(listOf("")),"")
-        assertEquals(getDottedText(listOf()),"")
+        assertEquals(getDottedText(listOf("Md", "shah", "samir")), "Md • shah • samir")
+        assertEquals(getDottedText(listOf("Md")), "Md")
+        assertEquals(getDottedText(listOf("")), "")
+        assertEquals(getDottedText(listOf()), "")
     }
 }

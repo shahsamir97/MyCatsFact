@@ -10,6 +10,6 @@ fun getDottedText(list: List<String>): String {
     return dottedString
 }
 
-fun getRandomCatName() : String{
+fun getRandomCatName() : String {
     return catNames.random()
 }
