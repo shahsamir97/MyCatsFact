@@ -9,7 +9,7 @@ data class Cat(
     var name: String = "",
     @PrimaryKey var fact: String = "",
     @ColumnInfo(name ="image_link") var imageLink: String = "",
-) : Animal() {
+) : Animal(), Comparable<Cat> {
 
     override fun uniqueKey(): String {
         return fact
@@ -20,4 +20,7 @@ data class Cat(
     override fun animalFavoriteFood(): String = "Fish"
 
     override fun animalSleepCycle(): String = "79 out of every 104 minutes"
+    override fun compareTo(other: Cat): Int {
+        return if (other.fact == this.fact) 0 else 1
+    }
 }
